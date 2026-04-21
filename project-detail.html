@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Detail | Milo Cazier</title>
+    <link rel="stylesheet" href="scratch-styles.css" />
+  </head>
+  <body>
+    <div class="top-chrome">
+      <header class="page site-header">
+        <h1 class="site-title">Milo Cazier *</h1>
+        <nav class="header-nav" aria-label="Primary">
+          <a href="scratch-index.html">Portfolio</a>
+          <a href="the-kitchen.html">The Kitchen</a>
+          <a href="about-me.html">About Me</a>
+        </nav>
+      </header>
+      <div class="header-divider" aria-hidden="true"></div>
+    </div>
+
+    <main class="page page-content detail-page">
+      <a class="back-link" href="scratch-index.html">← Back to portfolio</a>
+
+      <section class="project-layout" aria-label="Project Detail">
+        <article class="project-copy">
+          <h2 id="projectTitle">Project</h2>
+          <p id="projectDescription"></p>
+        </article>
+      </section>
+
+      <section class="related-gallery" aria-label="Project Gallery">
+        
+        <div class="project-slideshow" id="projectSlideshow">
+          <button class="slide-nav prev" id="slidePrev" type="button" aria-label="Previous image">‹</button>
+          <button class="slide-stage" id="slideStage" type="button" aria-label="Next image">
+            <img id="slideImage" src="" alt="Project gallery image" />
+          </button>
+          <button class="slide-nav next" id="slideNext" type="button" aria-label="Next image">›</button>
+        </div>
+        <div class="related-grid" id="relatedGrid"></div>
+      </section>
+    </main>
+
+    <script>
+      // Editable content model: update titles, descriptions, and gallery arrays here.
+      const PROJECTS = {
+        personalBrand: {
+          title: "My personal brand",
+          description: "Identity exploration and personal art direction studies.",
+          gallery: ["scratch-assets/swgreen-17.png"]
+        },
+        dogpawBand: {
+          title: "DOGPAW the band",
+          description: "Brand and campaign visuals for DOGPAW across posters and digital channels.",
+          gallery: [
+            "scratch-assets/swgreen-18.png",
+            "scratch-assets/swgreen-31.png",
+            "scratch-assets/webdogpawband/Artboard 1.png",
+            "scratch-assets/webdogpawband/Artboard 8.png",
+            "scratch-assets/webdogpawband/Artboard 12.png",
+            "scratch-assets/webdogpawband/Artboard 38.png",
+            "scratch-assets/webdogpawband/Artboard 39.png"
+          ]
+        },
+        hilaryQuilts: {
+          title: "Hilary Quilts",
+          description: "Quilt-inspired visual storytelling and branding studies.",
+          gallery: ["scratch-assets/swgreen-19.png"]
+        },
+        berryLovers: {
+          title: "Berry Lovers",
+          description: "Inspired by the intricate beauty of papel picado, these labels transform packaging into a celebration of culture and identity. The patterns draw from Mexican tradition, honoring the family roots behind the brand while creating a bold, modern shelf presence. A rebrand that honors where it comes from.",
+          gallery: [
+            "scratch-assets/swgreen-20.png",
+            "scratch-assets/swgreen-24.png",
+            "scratch-assets/webberryLovers/DES245 Product mocks-09.jpg",
+            "scratch-assets/webberryLovers/DES245 Product mocks-10.jpg",
+            "scratch-assets/webberryLovers/DES245 Product mocks-11.jpg",
+            "scratch-assets/webberryLovers/DES245 Product mocks-12.jpg",
+            "scratch-assets/webberryLovers/DES245 Product mocks-14.jpg",
+            "scratch-assets/webberryLovers/DES245 Product mocks-15.jpg",
+            "scratch-assets/webberryLovers/DES245 Product mocks-16.jpg",
+            "scratch-assets/webberryLovers/DES245 Product mocks-17.jpg",
+            "scratch-assets/webberryLovers/DES245 Product mocks-18.jpg",
+            "scratch-assets/webberryLovers/DES245 Product mocks-19.jpg",
+            "scratch-assets/webberryLovers/DES245 Product mocks-20.jpg"
+          ]
+        },
+        roseSoftball: {
+          title: "Rose Softball",
+          description: "Social campaign concepts and brand visuals for Rose Softball.",
+          gallery: [
+            "scratch-assets/swgreen-21.png",
+            "scratch-assets/webroseSoftball/Rose Softball team insta-07.png",
+            "scratch-assets/webroseSoftball/Rose Softball team insta-08.png",
+            "scratch-assets/webroseSoftball/Rose Softball team insta-10.png",
+            "scratch-assets/webroseSoftball/Rose Softball team insta-11.png",
+            "scratch-assets/webroseSoftball/Rose Softball team insta-13.png",
+            "scratch-assets/webroseSoftball/Rose Softball team insta-14.png",
+            "scratch-assets/webroseSoftball/Rose Softball team insta-16.png"
+          ]
+        },
+        trek2026: {
+          title: "Trek 2026",
+          description: "Exploratory brand concept and communication system.",
+          gallery: ["scratch-assets/swgreen-22.png"]
+        },
+        losCougs: {
+          title: "Los Cougs Collection",
+          description: "What would BYU's Latin Heritage Night look like? Hopefully like these hand painted inspired designs of your favorite campeones!",
+          gallery: [
+            "scratch-assets/swgreen-23.png",
+            "scratch-assets/swgreen-25.png",
+            "scratch-assets/swgreen-30.png",
+            "scratch-assets/webloscougs/Artboard 1.png",
+            "scratch-assets/webloscougs/Artboard 1(1).png",
+            "scratch-assets/webloscougs/Artboard 2.png",
+            "scratch-assets/webloscougs/Artboard 7.png",
+            "scratch-assets/webloscougs/Artboard 11_1.png",
+            "scratch-assets/webloscougs/Artboard 12_1.png",
+            "scratch-assets/webloscougs/Artboard 13.png",
+            "scratch-assets/webloscougs/Artboard 14_1.png",
+            "scratch-assets/webloscougs/Artboard 16.png",
+            "scratch-assets/webloscougs/Artboard 16_1.png",
+            "scratch-assets/webloscougs/Artboard 17.png",
+            "scratch-assets/webloscougs/Artboard 24.png"
+          ]
+        },
+        smallFish: {
+          title: "Small Fish Construction",
+          description: "Brand identity and marketing direction for a construction company.",
+          gallery: ["scratch-assets/swgreen-26.png"]
+        },
+        byuTunnelSinging: {
+          title: "BYU Tunnel Singing",
+          description: "Event branding and visual assets for BYU Tunnel Singing.",
+          gallery: ["scratch-assets/swgreen-27.png"]
+        },
+        underWater: {
+          title: "UNDER: the Water Company",
+          description: "Brand concept and digital creative for UNDER.",
+          gallery: ["scratch-assets/swgreen-28.png"]
+        },
+        sail: {
+          title: "Student Artificial Intelligence Library",
+          description: "Identity and communication design for the SAIL initiative.",
+          gallery: ["scratch-assets/swgreen-29.png"]
+        },
+        byuMandarin: {
+          title: "BYU Mandarin",
+          description: "Social, promotional, and campaign visuals for BYU Mandarin outreach.",
+          gallery: [
+            "scratch-assets/swgreen-32.png",
+            "scratch-assets/webbyumandarin/aoma to post-24.jpg",
+            "scratch-assets/webbyumandarin/aomc to post.png-22.png",
+            "scratch-assets/webbyumandarin/AOMC INSTA POST-25.jpg",
+            "scratch-assets/webbyumandarin/AOMC INSTA POST-27.jpg",
+            "scratch-assets/webbyumandarin/AOMC INSTA POST-28.jpg",
+            "scratch-assets/webbyumandarin/AOMC INSTA POST-33.jpg",
+            "scratch-assets/webbyumandarin/maneki-neko mock.jpg",
+            "scratch-assets/webbyumandarin/small maneki-neko-13.jpg",
+            "scratch-assets/webbyumandarin/small maneki-neko-15.jpg",
+            "scratch-assets/webbyumandarin/small maneki-neko-19.jpg"
+          ]
+        }
+      };
+
+      // Multiple grid images can point to the same project.
+      const IMAGE_TO_PROJECT = {
+        "swgreen-17.png": "personalBrand",
+        "swgreen-18.png": "dogpawBand",
+        "swgreen-19.png": "hilaryQuilts",
+        "swgreen-20.png": "berryLovers",
+        "swgreen-21.png": "roseSoftball",
+        "swgreen-22.png": "trek2026",
+        "swgreen-23.png": "losCougs",
+        "swgreen-24.png": "berryLovers",
+        "swgreen-25.png": "losCougs",
+        "swgreen-26.png": "smallFish",
+        "swgreen-27.png": "byuTunnelSinging",
+        "swgreen-28.png": "underWater",
+        "swgreen-29.png": "sail",
+        "swgreen-30.png": "losCougs",
+        "swgreen-31.png": "dogpawBand",
+        "swgreen-32.png": "byuMandarin"
+      };
+
+      const fallbackImage = "swgreen-17.png";
+      const params = new URLSearchParams(window.location.search);
+      const selectedImage = params.get("image");
+      const imageName = Object.prototype.hasOwnProperty.call(IMAGE_TO_PROJECT, selectedImage)
+        ? selectedImage
+        : fallbackImage;
+
+      const projectId = IMAGE_TO_PROJECT[imageName];
+      const project = PROJECTS[projectId];
+
+      document.getElementById("projectTitle").textContent = project.title;
+      document.getElementById("projectDescription").textContent = project.description;
+
+      const relatedGrid = document.getElementById("relatedGrid");
+      const slideImage = document.getElementById("slideImage");
+      const slidePrev = document.getElementById("slidePrev");
+      const slideNext = document.getElementById("slideNext");
+      const slideStage = document.getElementById("slideStage");
+      const galleryItems = project.gallery;
+      let currentSlideIndex = 0;
+      const thumbButtons = [];
+
+      const showSlide = (index) => {
+        if (!galleryItems.length) return;
+        currentSlideIndex = (index + galleryItems.length) % galleryItems.length;
+
+        const path = galleryItems[currentSlideIndex];
+        slideImage.src = encodeURI(path);
+        slideImage.alt = `${project.title} gallery image ${currentSlideIndex + 1}`;
+
+        thumbButtons.forEach((button, btnIndex) => {
+          button.classList.toggle("active", btnIndex === currentSlideIndex);
+        });
+      };
+
+      relatedGrid.innerHTML = "";
+      galleryItems.forEach((path, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "thumb-button";
+        button.setAttribute("aria-label", `${project.title} thumbnail ${index + 1}`);
+
+        const img = document.createElement("img");
+        img.src = encodeURI(path);
+        img.alt = `${project.title} thumbnail ${index + 1}`;
+
+        button.addEventListener("click", () => showSlide(index));
+        button.appendChild(img);
+        relatedGrid.appendChild(button);
+        thumbButtons.push(button);
+      });
+
+      slidePrev.addEventListener("click", () => showSlide(currentSlideIndex - 1));
+      slideNext.addEventListener("click", () => showSlide(currentSlideIndex + 1));
+      slideStage.addEventListener("click", () => showSlide(currentSlideIndex + 1));
+
+      showSlide(0);
+    </script>
+  </body>
+</html>

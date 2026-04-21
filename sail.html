@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SAIL AI Literacy App</title>
+    <style>
+      :root {
+        --pink: #ff70fe;
+        --burgundy: #680031;
+        --orange: #fe5d02;
+        --lime: #e5fc54;
+        --green: #32fe6b;
+        --teal: #014051;
+        --blue: #2d51ff;
+        --black: #000;
+        --white: #fff;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Trebuchet MS", "Avenir Next", Arial, sans-serif;
+        background: linear-gradient(180deg, #ffffff 0%, #eaf3ff 100%);
+        color: var(--black);
+      }
+      .app { max-width: 980px; margin: 0 auto; padding: 24px; }
+      .card {
+        background: var(--white);
+        border: 4px solid var(--black);
+        border-radius: 24px;
+        box-shadow: 8px 8px 0 var(--black);
+        padding: 20px;
+      }
+      .screen { display: none; }
+      .screen.active { display: block; }
+      h1, h2, h3, p { margin: 0; }
+      .muted { color: rgba(0, 0, 0, 0.65); }
+      .spacer { height: 14px; }
+      .row { display: flex; gap: 12px; flex-wrap: wrap; }
+      .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+      .stat { border: 4px solid var(--black); border-radius: 18px; padding: 12px; text-align: center; box-shadow: 4px 4px 0 var(--black); }
+      .chip { font-size: 12px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.08em; }
+      .value { font-size: 28px; font-weight: 900; margin-top: 2px; }
+      .progress-wrap { height: 18px; border: 4px solid var(--black); border-radius: 999px; overflow: hidden; background: var(--white); }
+      .progress { height: 100%; width: 0%; background: var(--blue); transition: width 200ms ease; }
+      .btn {
+        border: 4px solid var(--black);
+        border-radius: 999px;
+        padding: 12px 18px;
+        font-weight: 900;
+        cursor: pointer;
+        background: var(--white);
+      }
+      .btn.primary { background: var(--green); }
+      .btn.blue { background: var(--blue); color: var(--white); }
+      .btn.orange { background: var(--orange); }
+      .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+      .lesson-box { border: 4px solid var(--black); border-radius: 18px; padding: 14px; background: #f8f8f8; }
+      textarea {
+        width: 100%;
+        min-height: 100px;
+        border: 4px solid var(--black);
+        border-radius: 12px;
+        padding: 10px;
+        font-family: inherit;
+      }
+      @media (max-width: 760px) {
+        .stats { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <section id="onboarding" class="screen active card">
+        <h1 id="onbTitle">Welcome to SAIL</h1>
+        <div class="spacer"></div>
+        <p id="onbBody" class="muted">Learn how to use AI for school, life, and your future.</p>
+        <div class="spacer"></div>
+        <div class="progress-wrap"><div id="onbProgress" class="progress"></div></div>
+        <div class="spacer"></div>
+        <div class="row">
+          <button id="onbBack" class="btn">Back</button>
+          <button id="onbNext" class="btn primary">Next</button>
+        </div>
+      </section>
+
+      <section id="dashboard" class="screen card">
+        <h2>SAIL Dashboard</h2>
+        <div class="spacer"></div>
+        <p class="muted">AI literacy for school, home, and future work.</p>
+        <div class="spacer"></div>
+        <div class="stats">
+          <div class="stat" style="background: var(--orange);"><div class="chip">XP</div><div id="xpValue" class="value">1280</div></div>
+          <div class="stat" style="background: var(--pink);"><div class="chip">Streak</div><div id="streakValue" class="value">12</div></div>
+          <div class="stat" style="background: var(--lime);"><div class="chip">CPU Chips</div><div id="chipValue" class="value">4</div></div>
+        </div>
+        <div class="spacer"></div>
+        <div class="lesson-box">
+          <h3>Current Course: AI Fundamentals</h3>
+          <div class="spacer"></div>
+          <div class="progress-wrap"><div id="fundProgress" class="progress" style="width:72%"></div></div>
+          <div class="spacer"></div>
+          <p class="muted">Complete fundamentals to unlock specialty tracks.</p>
+        </div>
+        <div class="spacer"></div>
+        <button id="startLesson" class="btn blue">Continue Lesson</button>
+      </section>
+
+      <section id="lesson" class="screen card">
+        <h2 id="lessonTitle">What is AI?</h2>
+        <div class="spacer"></div>
+        <p id="lessonBody" class="muted"></p>
+        <div class="spacer"></div>
+        <div class="progress-wrap"><div id="lessonProgress" class="progress"></div></div>
+        <div class="spacer"></div>
+        <div id="practicePanel" class="lesson-box" style="display:none;">
+          <p class="chip">Your Prompt</p>
+          <div class="spacer"></div>
+          <textarea id="promptInput">Explain gravity in 2 sentences for a middle schooler.</textarea>
+        </div>
+        <div id="reflectPanel" class="lesson-box" style="display:none;">
+          <p><strong>Reflection:</strong> What should you verify before trusting an AI answer?</p>
+        </div>
+        <div class="spacer"></div>
+        <div class="row">
+          <button id="lessonBack" class="btn">Back</button>
+          <button id="lessonNext" class="btn orange">Continue</button>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const state = {
+        screen: "onboarding",
+        xp: 1280,
+        streak: 12,
+        chips: 4,
+        onbStep: 0,
+        lessonStep: 0,
+      };
+
+      const onboardingSteps = [
+        { title: "Welcome to SAIL", body: "Learn how to use AI for school, life, and your future." },
+        { title: "Learn by Doing", body: "Practice with real prompts, then reflect and improve." },
+        { title: "Unlock Your Path", body: "Finish AI Fundamentals to unlock specialty tracks." },
+        { title: "Earn CPU Chips", body: "Complete lessons and collect rewards as you level up." },
+      ];
+
+      const lessonSteps = [
+        { title: "What is AI?", body: "AI can generate ideas and explanations, but it is not always correct.", type: "intro" },
+        { title: "See It in Action", body: "AI helps simplify hard ideas and jumpstart learning.", type: "example" },
+        { title: "Try It Yourself", body: "Use the prompt and think about quality and clarity.", type: "practice" },
+        { title: "Think About It", body: "Good AI users revise prompts and verify important facts.", type: "reflect" },
+      ];
+
+      const screens = {
+        onboarding: document.getElementById("onboarding"),
+        dashboard: document.getElementById("dashboard"),
+        lesson: document.getElementById("lesson"),
+      };
+
+      function setScreen(name) {
+        state.screen = name;
+        Object.entries(screens).forEach(([key, node]) => node.classList.toggle("active", key === name));
+      }
+
+      function renderOnboarding() {
+        const step = onboardingSteps[state.onbStep];
+        document.getElementById("onbTitle").textContent = step.title;
+        document.getElementById("onbBody").textContent = step.body;
+        document.getElementById("onbProgress").style.width = ((state.onbStep + 1) / onboardingSteps.length) * 100 + "%";
+        document.getElementById("onbBack").style.display = state.onbStep === 0 ? "none" : "inline-block";
+        document.getElementById("onbNext").textContent = state.onbStep === onboardingSteps.length - 1 ? "Start Learning" : "Next";
+      }
+
+      function renderDashboard() {
+        document.getElementById("xpValue").textContent = String(state.xp);
+        document.getElementById("streakValue").textContent = String(state.streak);
+        document.getElementById("chipValue").textContent = String(state.chips);
+      }
+
+      function renderLesson() {
+        const step = lessonSteps[state.lessonStep];
+        document.getElementById("lessonTitle").textContent = step.title;
+        document.getElementById("lessonBody").textContent = step.body;
+        document.getElementById("lessonProgress").style.width = ((state.lessonStep + 1) / lessonSteps.length) * 100 + "%";
+
+        document.getElementById("practicePanel").style.display = step.type === "practice" ? "block" : "none";
+        document.getElementById("reflectPanel").style.display = step.type === "reflect" ? "block" : "none";
+
+        document.getElementById("lessonBack").style.display = state.lessonStep === 0 ? "none" : "inline-block";
+        document.getElementById("lessonNext").textContent = state.lessonStep === lessonSteps.length - 1 ? "Complete Lesson +30 XP" : "Continue";
+      }
+
+      document.getElementById("onbBack").addEventListener("click", () => {
+        state.onbStep = Math.max(0, state.onbStep - 1);
+        renderOnboarding();
+      });
+
+      document.getElementById("onbNext").addEventListener("click", () => {
+        if (state.onbStep < onboardingSteps.length - 1) {
+          state.onbStep += 1;
+          renderOnboarding();
+          return;
+        }
+        setScreen("dashboard");
+        renderDashboard();
+      });
+
+      document.getElementById("startLesson").addEventListener("click", () => {
+        state.lessonStep = 0;
+        setScreen("lesson");
+        renderLesson();
+      });
+
+      document.getElementById("lessonBack").addEventListener("click", () => {
+        state.lessonStep = Math.max(0, state.lessonStep - 1);
+        renderLesson();
+      });
+
+      document.getElementById("lessonNext").addEventListener("click", () => {
+        if (state.lessonStep < lessonSteps.length - 1) {
+          state.lessonStep += 1;
+          renderLesson();
+          return;
+        }
+        state.xp += 30;
+        state.streak += 1;
+        state.chips += 1;
+        setScreen("dashboard");
+        renderDashboard();
+      });
+
+      renderOnboarding();
+    </script>
+  </body>
+</html>
